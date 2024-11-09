@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import ImageUploading from 'react-images-uploading';
 import { styled } from '@mui/system';
 import Button from '@mui/material/Button';
@@ -7,6 +7,8 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import Card from '@mui/material/Card';
 import ImageModal from './ImageModal';
 import axios from "axios";
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const BlackButton = styled(Button)({
   color: 'black',
@@ -51,6 +53,7 @@ const ImageUploader = () => {
   const [images, setImages] = React.useState([]);
   const [error, setError] = React.useState(null);
   const [predictedFace, setPredictedFace] = React.useState(null);
+  const [isLoading, setLoading] = React.useState(false);
 
   const maxNumber = 4;
 
@@ -61,9 +64,9 @@ const ImageUploader = () => {
   };
 
   const predict = () => {
+    setLoading(true);
     var formData = new FormData();
     formData.append("image", images[0].file);
-    console.log(formData);
 
     backendClient.post('/predict', formData, {
       headers: {
@@ -71,6 +74,7 @@ const ImageUploader = () => {
       }
     })
     .then((response) => {
+      setLoading(false);
       setPredictedFace(response.data.prediction);
     })
     .catch((error) => {
@@ -88,9 +92,12 @@ const ImageUploader = () => {
   }
 
   const handleClose = () => setOpen(false);
+
+  const resetMsg = () => setPredictedFace(null);
   
 
   return (
+    <Fragment>
       <ImageUploading
         multiple
         value={images}
@@ -143,30 +150,46 @@ const ImageUploader = () => {
             ))}
             <div className="flex items-center justify-center">
             {imageList.length > 0 ?
-              <Button
-              variant="contained"
-              onClick={predict}
-              className="font-bold sm:my-2"
-              {...dragProps}
-            >
-              Predict!
-            </Button>
-             : null } 
+              <Fragment>
+                <Button
+                variant="contained"
+                onClick={predict}
+                {...dragProps}
+              >
+                Predict!
+              </Button>
+            </Fragment>
+             : null }
              </div>
              <ImageModal 
                 open={open}
                 handleClose={handleClose}
                 imageSrc={previewImg} />
               {predictedFace ?
-                <div className="sm:my-4 sm:py-4 flex justify-center items-center"
+                <div className="sm:my-4 sm:py-4 flex flex-col justify-center items-center"
               >
-                <Typography variant="h4">{predictedFace}!</Typography>
+                <Typography variant="h4" className="sm:py-5">{predictedFace}!</Typography>
+                  <Button
+                  variant="contained"
+                  onClick={resetMsg}
+                  {...dragProps}
+                >
+                  Clear prediction
+                </Button>
                 </div>
               : null } 
             {/* {images.length ? <RedButton variant="outlined" onClick={onImageRemoveAll}>Remove all images</RedButton> : null} */}
           </Card>
         )}
+        
       </ImageUploading>
+      <Backdrop
+      sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+      open={isLoading}
+    >
+      <CircularProgress color="inherit" />
+    </Backdrop>
+    </Fragment>
   );
 }
 
