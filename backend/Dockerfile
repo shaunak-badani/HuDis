@@ -4,7 +4,6 @@ WORKDIR /app
 COPY * ./
 RUN pip install -r ./requirements.txt
 RUN pip install gunicorn
-RUN python3 train.py
 ENV FLASK_ENV production
 
 EXPOSE 8000
