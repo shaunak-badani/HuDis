@@ -1,0 +1,1 @@
+docker images -f "dangling=true" -q | xargs -n1 -I {} /bin/bash -c 'docker rmi {}'
