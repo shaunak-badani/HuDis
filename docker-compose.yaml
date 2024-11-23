@@ -12,10 +12,6 @@ services:
 
   backend_flask:
     environment:
-      - FLASK_APP=app.py
-      - FLASK_ENV=production
-      - FLASK_DEBUG=0
-      - FLASK_RUN_PORT=8000
       - CROSS_ORIGIN_ALLOW_URL=http://vcm-43401.vm.duke.edu
     build: backend
     networks:
