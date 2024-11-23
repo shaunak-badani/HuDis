@@ -4,6 +4,7 @@ services:
     build: frontend
     ports:
       - "80:80"
+      - "127.0.0.1:8000:8000"
     depends_on:
       - backend_flask
     networks:
@@ -22,7 +23,7 @@ networks:
 ## With this docker file, networking is setup
 ## If I do the following: 
 
-## SSH into the image:
+## SSH into the frontend container:
 ## sudo docker exec -i -t 71e7ae21c06c /bin/sh
 ## Install curl
 ## apk update

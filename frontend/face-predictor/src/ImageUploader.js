@@ -45,7 +45,7 @@ const GreenButton = styled(Button)({
 });
 
 const backendClient = axios.create({
-  baseURL: 'http://vcm-43401.vm.duke.edu:5000'
+  baseURL: "http://localhost:8000"
 });
 
 

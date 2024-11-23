@@ -7,7 +7,7 @@ import onnxruntime as ort
 import pickle
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/predict/*": {"origins": "http://vcm-43401.vm.duke.edu"}})
 
 
 TARGET_NAMES = ['Ariel Sharon', 'Colin Powell', 'Donald Rumsfeld', 'George W Bush',
