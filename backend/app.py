@@ -5,9 +5,10 @@ from PIL import Image
 import numpy as np
 import onnxruntime as ort
 import pickle
+import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/predict/*": {"origins": os.getenv('CROSS_ORIGIN_ALLOW_URL')}})
 
 
 TARGET_NAMES = ['Ariel Sharon', 'Colin Powell', 'Donald Rumsfeld', 'George W Bush',

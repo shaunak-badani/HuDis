@@ -4,9 +4,33 @@ services:
     build: frontend
     ports:
       - "80:80"
+      - "127.0.0.1:8000:8000"
     depends_on:
       - backend_flask
+    networks:
+      - app-network
+
   backend_flask:
+    environment:
+      - CROSS_ORIGIN_ALLOW_URL=http://vcm-43401.vm.duke.edu
     build: backend
-    ports:
-      - "127.0.0.1:5000:8000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+
+## With this docker file, networking is setup
+## If I do the following: 
+
+## SSH into the frontend container:
+## sudo docker exec -i -t 71e7ae21c06c /bin/sh
+## Install curl
+## apk update
+## apk upgrade
+## apk add curl
+## curl -X POST http://backend_flask:8000/predict
+## It gives the output:
+## {"error":"No image passed!"}
